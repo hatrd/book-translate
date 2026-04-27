@@ -51,16 +51,23 @@ less book-zh/.book-translate-work/agent-instructions.md
 
 ```bash
 pandoc book-zh/chapters/*.md \
-  --resource-path=book-zh \
+  --resource-path=book-zh/chapters \
   --toc \
   --toc-depth=2 \
-  --metadata title="Book Title 中文版" \
+  --split-level=2 \
+  --metadata title="译本书名" \
   --metadata author="Author Name" \
   --metadata lang=zh \
   -o book-zh.epub
 ```
 
-`--resource-path=book-zh` 用于让 Pandoc 找到 Markdown 中引用的图片，例如 `images/00001.jpeg`。
+EPUB 导出注意事项：
+
+- 当章节 Markdown 中的图片路径是 `../images/00001.jpeg` 这类形式时，应使用 `--resource-path=book-zh/chapters`。这样 Pandoc 会从章节目录出发解析相对路径，并把图片真正打包进 EPUB。
+- `--toc-depth=2` 会把章和二级小节写入目录。如果生成的 Markdown 使用了需要进入目录的 `###` 标题，可以改成 `--toc-depth=3`。
+- `--split-level=2` 会把每个 `##` 小节拆成独立 XHTML 文件，避免部分阅读器点击目录中的小节锚点时跳回本章一级标题。
+- 如果使用 `--toc-depth=3`，也可以考虑搭配 `--split-level=3`，原因同上。
+- 如果源书包含封面图，需要显式添加 `--epub-cover-image=book-zh/images/<cover-file>`；未被正文引用的图片不会自动进入最终 EPUB。
 
 ## 依赖
 

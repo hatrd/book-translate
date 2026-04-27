@@ -1,5 +1,7 @@
 # book-translate
 
+[中文说明](README.zh-CN.md)
+
 `book-translate` turns a local `.azw3` book into a publishable Chinese Markdown folder, then lets you export that folder to EPUB with Pandoc.
 
 The core design choice of this project is to **trust the agent**. The outer Python program does not mechanically split the book into fixed-size chunks or pretend those chunks are chapters. Instead, it prepares the complete source workspace and hands the whole book to one Codex agent. The agent reads the full book context, recovers the real structure, builds the glossary, decides whether it needs internal sub-agents, and writes the final chapter Markdown files.
@@ -51,16 +53,23 @@ After `book-zh/chapters/` exists, export it with Pandoc:
 
 ```bash
 pandoc book-zh/chapters/*.md \
-  --resource-path=book-zh \
+  --resource-path=book-zh/chapters \
   --toc \
   --toc-depth=2 \
-  --metadata title="Book Title 中文版" \
+  --split-level=2 \
+  --metadata title="Translated Book Title" \
   --metadata author="Author Name" \
   --metadata lang=zh \
   -o book-zh.epub
 ```
 
-The `--resource-path=book-zh` option lets Pandoc find image references such as `images/00001.jpeg`.
+Important EPUB export notes:
+
+- Use `--resource-path=book-zh/chapters` when chapter Markdown files reference images as `../images/00001.jpeg`. This lets Pandoc resolve the path from the chapter directory and actually package the images into the EPUB.
+- Keep `--toc-depth=2` for a chapter/subsection table of contents. If your generated Markdown uses `###` headings that should appear in the EPUB TOC, change it to `--toc-depth=3`.
+- Use `--split-level=2` so each `##` subsection becomes its own XHTML file in the EPUB. This avoids reader-specific bugs where TOC links to nested heading anchors jump back to the chapter's top-level heading.
+- If you use `--toc-depth=3`, consider `--split-level=3` for the same reason.
+- If the source contains a cover image, pass it explicitly with `--epub-cover-image=book-zh/images/<cover-file>`; otherwise unreferenced images are not included automatically.
 
 ## Requirements
 

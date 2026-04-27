@@ -1,0 +1,11 @@
+[project]
+name = "book-translate"
+version = "0.1.0"
+description = "Resumable AZW3 to translated Markdown/EPUB/PDF pipeline using Codex CLI."
+requires-python = ">=3.11"
+
+[project.scripts]
+book-translate = "book_translate.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

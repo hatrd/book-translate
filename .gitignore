@@ -1,0 +1,24 @@
+# Python caches/build outputs
+__pycache__/
+*.py[cod]
+.pytest_cache/
+*.egg-info/
+
+# Pipeline workspaces and generated outputs
+work/
+dist/
+.book-translate-work/
+book-zh/
+*-zh/
+*.epub
+*.pdf
+
+# Local source books / copyrighted inputs
+*.azw
+*.azw3
+*.mobi
+
+# Local Codex/session files and scratch helpers
+.codex
+.worktrees/
+tools/
